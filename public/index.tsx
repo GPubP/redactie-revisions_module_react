@@ -8,3 +8,5 @@ registerContentDetailTab(CONFIG.name, {
 	component: ContentDetailTab,
 	containerId: 'revisions' as any,
 });
+
+console.log('check');
