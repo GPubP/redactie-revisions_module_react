@@ -1,10 +1,12 @@
-import React from 'react';
-import Core from "@redactie/redactie-core";
+import ContentDetailTab from './lib/components/ContentDetailTab/ContentDetailTab';
+import { registerContentDetailTab } from './lib/connectors/content';
+import { CONFIG } from './lib/revisions.const';
 
-Core.routes.register({
-	path: '/demo',
-	component: () => <>Hello world</>,
-	navigation: {
-		label: 'Demo'
-	}
+registerContentDetailTab(CONFIG.name, {
+	label: 'Revisies',
+	module: CONFIG.module,
+	component: ContentDetailTab,
+	containerId: 'revisions' as any,
 });
+
+console.log('check');
