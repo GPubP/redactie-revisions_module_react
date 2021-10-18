@@ -1,5 +1,5 @@
 import ContentDetailTab from './lib/components/ContentDetailTab/ContentDetailTab';
-import { registerContentDetailTab } from './lib/connectors/content';
+import { registerContentDetailTab } from './lib/connectors';
 import { CONFIG } from './lib/revisions.const';
 
 registerContentDetailTab(CONFIG.name, {
@@ -8,5 +8,3 @@ registerContentDetailTab(CONFIG.name, {
 	component: ContentDetailTab,
 	containerId: 'revisions' as any,
 });
-
-console.log('check');
