@@ -6,5 +6,5 @@ registerContentDetailTab(CONFIG.name, {
 	label: 'Revisies',
 	module: CONFIG.module,
 	component: ContentDetailTab,
-	containerId: 'revisions' as any,
+	containerId: 'content-detail' as any,
 });

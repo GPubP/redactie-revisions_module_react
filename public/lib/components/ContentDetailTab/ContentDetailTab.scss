@@ -1,0 +1,64 @@
+@import '~@a-ui/core/dist/assets/styles/_quarks';
+
+.a-revision-date {
+	color: $endeavour;
+	cursor: pointer;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
+.a-revision-checkbox {
+	padding: $spacer-xs 0;
+
+	label {
+		margin-bottom: 0;
+	}
+}
+
+.a-revision-table-row {
+	&--red {
+		background-color: $monza-lighter;
+	}
+
+	&--green {
+		background-color: $mantis-lighter;
+	}
+
+	&--blue {
+		background-color: $st-tropaz-lighter;
+	}
+}
+
+.m-expandable-table-sub-list {
+	.a-revision-table-column {
+		&__chevron {
+			&::after {
+				border: none !important;
+			}
+		}
+	}
+}
+
+.a-revision-table-column {
+	&__chevron {
+		width: 7.5%;
+	}
+
+	&__checkbox {
+		width: 7.5%;
+	}
+
+	&__date {
+		width: 30%;
+	}
+
+	&__editor {
+		width: 30%;
+	}
+
+	&__state {
+		width: 25%;
+	}
+}

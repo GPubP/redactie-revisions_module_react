@@ -9,6 +9,8 @@ export interface ExpandableTableProps<I, T> {
 		onRenderChildren: (rowData: T) => void
 	) => TableColumn<T>[];
 	onChange: (values: FormikValues) => void;
+	loading: boolean;
+	initialToggledRows?: Record<string, boolean>;
 }
 
 export interface ExpandableTableRow {

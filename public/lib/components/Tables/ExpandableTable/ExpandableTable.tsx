@@ -1,27 +1,32 @@
 import { Table } from '@acpaas-ui/react-editorial-components';
 import { FormikOnChangeHandler } from '@redactie/utils';
-import classnames from 'classnames/bind';
 import { Formik } from 'formik';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../../connectors';
 
-import styles from './ExpandableTable.module.scss';
+import './ExpandableTable.scss';
 import {
 	ExpandableTableInitialValues,
 	ExpandableTableProps,
 	ExpandableTableRow,
 } from './ExpandableTable.types';
 
-const cx = classnames.bind(styles);
-
 const ExpandableTable = <T extends ExpandableTableRow, I extends ExpandableTableInitialValues<T>>({
 	initialValues,
 	onChange,
 	columns,
+	loading = false,
+	initialToggledRows,
 }: ExpandableTableProps<I, T>): ReactElement => {
 	const [t] = useCoreTranslation();
-	const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+	const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>(
+		initialToggledRows || {}
+	);
+
+	useEffect(() => {
+		setExpandedRows(initialToggledRows || {});
+	}, [initialToggledRows]);
 
 	const onRenderChildren = (rowData: T): void => {
 		if (!rowData.toggled) {
@@ -45,7 +50,8 @@ const ExpandableTable = <T extends ExpandableTableRow, I extends ExpandableTable
 			<Table
 				fixed
 				datakey="id"
-				className={cx('m-expandable-table-sub-list')}
+				striped={false}
+				className="m-expandable-table-sub-list"
 				columns={columns(values, setFieldValue, onRenderChildren)}
 				rows={rowData.children}
 				noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-ITEMS'])}
@@ -63,12 +69,13 @@ const ExpandableTable = <T extends ExpandableTableRow, I extends ExpandableTable
 						<Table
 							fixed
 							dataKey="id"
-							className={cx('m-expandable-table', 'u-margin-top')}
+							striped={false}
+							className="m-expandable-table u-margin-top"
 							tableClassName="a-table--fixed--sm"
 							columns={columns(values, setFieldValue, onRenderChildren)}
 							rows={values.rows}
 							noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-ITEMS'])}
-							loading={false}
+							loading={loading}
 							expandedRows={expandedRows}
 							rowExpansionTemplate={(rowData: T) =>
 								renderSubTable(values, rowData, setFieldValue)

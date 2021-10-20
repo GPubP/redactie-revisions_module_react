@@ -1,14 +1,14 @@
 import { Button, Checkbox } from '@acpaas-ui/react-components';
 import { TableColumn } from '@redactie/utils';
-import classnames from 'classnames/bind';
 import { Field } from 'formik';
+import moment from 'moment';
 import { isEmpty } from 'ramda';
 import React, { ChangeEvent } from 'react';
 
-import styles from './ContentDetailTab.module.scss';
-import { RevisionForm, RevisionTableRow } from './ContentDetailTab.types';
+import { DATE_FORMATS } from '../../revisions.const';
 
-const cx = classnames.bind(styles);
+import './ContentDetailTab.scss';
+import { RevisionForm, RevisionTableRow } from './ContentDetailTab.types';
 
 export const REVISION_COLUMNS = (
 	{ selectedRows }: RevisionForm,
@@ -19,6 +19,7 @@ export const REVISION_COLUMNS = (
 		{
 			label: '',
 			disableSorting: true,
+			classList: ['a-revision-table-column__chevron'],
 			component(value: string, rowData: RevisionTableRow, rowIndex: number) {
 				if (!rowData.children || isEmpty(rowData.children)) {
 					return;
@@ -27,6 +28,7 @@ export const REVISION_COLUMNS = (
 				return (
 					<Button
 						ariaLabel="Edit"
+						size="small"
 						icon={rowData.toggled ? 'chevron-down' : 'chevron-right'}
 						onClick={() => {
 							if (!onRenderChildren) {
@@ -49,33 +51,52 @@ export const REVISION_COLUMNS = (
 		{
 			label: '',
 			disableSorting: true,
-			component(value: string, { checked, id, parentIndex }, rowIndex: number) {
+			classList: ['a-revision-table-column__checkbox'],
+			component(
+				value: string,
+				{ checked, id, parentIndex, lastArchived, lastPublished },
+				rowIndex: number
+			) {
 				const field =
 					typeof parentIndex === 'number'
 						? `rows.${parentIndex}.children.${rowIndex}.checked`
 						: `rows.${rowIndex}.checked`;
 
 				return (
-					<Field
-						as={Checkbox}
-						checked={checked}
-						id={field}
-						name={field}
-						disabled={!selectedRows.includes(id) && selectedRows.length >= 2}
-						onChange={(e: ChangeEvent<HTMLInputElement>) => {
-							setFieldValue(field, e.target.checked);
+					<div className="a-revision-checkbox">
+						<Field
+							as={Checkbox}
+							checked={checked}
+							className={'test'}
+							id={field}
+							name={field}
+							disabled={!selectedRows.includes(id) && selectedRows.length >= 2}
+							onChange={(e: ChangeEvent<HTMLInputElement>) => {
+								setFieldValue(field, e.target.checked);
 
-							if (e.target.checked) {
-								setFieldValue('selectedRows', [...selectedRows, id]);
-								return;
-							}
+								setFieldValue(
+									typeof parentIndex === 'number'
+										? `rows.${parentIndex}.children.${rowIndex}.classList`
+										: `rows.${rowIndex}.classList`,
+									[
+										...(lastPublished ? ['a-revision-table-row--green'] : []),
+										...(lastArchived ? ['a-revision-table-row--red'] : []),
+										...(e.target.checked ? ['a-revision-table-row--blue'] : []),
+									]
+								);
 
-							setFieldValue(
-								'selectedRows',
-								selectedRows.filter(revision => revision !== id)
-							);
-						}}
-					/>
+								if (e.target.checked) {
+									setFieldValue('selectedRows', [...selectedRows, id]);
+									return;
+								}
+
+								setFieldValue(
+									'selectedRows',
+									selectedRows.filter(revision => revision !== id)
+								);
+							}}
+						/>
+					</div>
 				);
 			},
 		},
@@ -83,10 +104,18 @@ export const REVISION_COLUMNS = (
 			label: 'Datum',
 			value: 'date',
 			disableSorting: true,
-			component(value: string) {
+			classList: ['a-revision-table-column__date'],
+			component(value: string, { id }) {
 				return (
-					<p className={cx('a-date')} onClick={console.log}>
-						{value}
+					<p
+						className="a-revision-date"
+						onClick={() => {
+							// Dirty hack to trigger change on form
+							setTimeout(() => setFieldValue('detailId', ''));
+							setFieldValue('detailId', id);
+						}}
+					>
+						{moment(value).format(DATE_FORMATS.dateAndTime)}
 					</p>
 				);
 			},
@@ -94,12 +123,19 @@ export const REVISION_COLUMNS = (
 		{
 			label: 'Bewerkt door',
 			value: 'lastEditor',
+			classList: ['a-revision-table-column__editor'],
 			disableSorting: true,
 		},
 		{
 			label: 'Status',
 			value: 'workflowState',
+			classList: ['a-revision-table-column__state'],
 			disableSorting: true,
 		},
 	];
 };
+
+export const REVISIONS_QUERY_PARAMS_CONFIG = {
+	page: { defaultValue: 1, type: 'number' },
+	pagesize: { defaultValue: 5, type: 'number' },
+} as const;

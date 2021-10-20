@@ -1,7 +1,6 @@
 @import '~@a-ui/core/dist/assets/styles/_quarks';
 
-// Prevent converting class to hash
-[class~=m-expandable-table] {
+.m-expandable-table {
 	.a-table-expanded-row {
 		td {
 			padding: 0;
