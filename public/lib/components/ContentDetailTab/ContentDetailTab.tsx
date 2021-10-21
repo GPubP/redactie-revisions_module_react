@@ -24,7 +24,12 @@ import { revisionsFacade } from '../../store/revisions';
 
 import { REVISION_COLUMNS, REVISIONS_QUERY_PARAMS_CONFIG } from './ContentDetailTab.const';
 import './ContentDetailTab.scss';
-import { RestoreModalContext, RevisionForm, RevisionTableRow } from './ContentDetailTab.types';
+import {
+	ContentStateMapping,
+	RestoreModalContext,
+	RevisionForm,
+	RevisionTableRow,
+} from './ContentDetailTab.types';
 
 const ContentDetailTab: FC<ExternalTabProps> = ({
 	siteId,
@@ -73,10 +78,14 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 	});
 
 	useEffect(() => {
-		if (revisionsLoadingState !== LoadingState.Loading && !statusesLoading) {
+		if (
+			revisionsLoadingState !== LoadingState.Loading &&
+			!statusesLoading &&
+			!isEmpty(formInitialValue.rows)
+		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [revisionsLoadingState, statusesLoading]);
+	}, [formInitialValue.rows, revisionsLoadingState, statusesLoading]);
 
 	useEffect(() => {
 		if (!revisionId) {
@@ -140,10 +149,12 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 			workflowState:
 				statusesPagination?.data.find(
 					status => status.data.systemName === revision.meta.data.workflowStateName
-				)?.data.name || '',
-			lastEditor: `${revision.meta.user.firstname} ${revision.meta.user.lastname}`,
+				)?.data.name || ContentStateMapping[revision.meta.data.state],
+			lastEditor: revision.meta.user.firstname
+				? `${revision.meta.user.firstname} ${revision.meta.user.lastname}`
+				: 'Onbekend',
 			checked: false,
-			toggled: !!lastPublished && index === 0,
+			toggled: !!lastPublished && index === 0 && !isEmpty(revision.children),
 			date: revision.meta.created,
 			lastPublished,
 			lastArchived,
@@ -154,19 +165,20 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 			...(isChild && {
 				parentIndex: index,
 			}),
-			...(revision.children && {
-				children: revision.children.map(child => pickProps(child, index, true)),
-			}),
+			...(revision.children &&
+				!isEmpty(revision.children) && {
+					children: revision.children.map(child => pickProps(child, index, true)),
+				}),
 		};
 	};
 
 	useEffect(() => {
 		if (
-			isEmpty(revisions) ||
 			!sinceLastPublished ||
 			!statusesPagination ||
-			initialLoading === LoadingState.Loading ||
-			lastPublishedLoadingState === LoadingState.Loading
+			revisionsLoadingState !== LoadingState.Loading ||
+			lastPublishedLoadingState === LoadingState.Loading ||
+			statusesLoading
 		) {
 			return;
 		}
@@ -180,7 +192,13 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 
 			const row = pickProps(revision, index, false, checkLastPublished, checkLastUnpublished);
 
-			if (checkLastPublished && !checkLastUnpublished && index === 0) {
+			if (
+				checkLastPublished &&
+				!checkLastUnpublished &&
+				index === 0 &&
+				revision.children &&
+				!isEmpty(revision.children)
+			) {
 				setInitialToggledRows({ [revision.uuid]: true });
 			}
 
@@ -196,7 +214,16 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 			rows,
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [contentId, revisions, sinceLastPublished, siteId, statusesPagination, initialLoading]);
+	}, [
+		contentId,
+		revisions,
+		sinceLastPublished,
+		siteId,
+		statusesPagination,
+		statusesLoading,
+		revisionsLoadingState,
+		lastPublishedLoadingState,
+	]);
 
 	const loadMore = (): void => {
 		setQuery({
@@ -287,7 +314,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 	};
 
 	return (
-		<div className="u-margin-top">
+		<div>
 			<p>
 				Selecteer één revisie om ze te bekijken of terug te zetten. Selecteer twee revisies
 				om ze met elkaar te vergelijken.

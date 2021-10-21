@@ -81,7 +81,9 @@ const RevisionModal: FC<RevisionModalProps> = ({
 									<div>
 										<p>
 											<span className={cx('u-text-bold')}>Door:</span>{' '}
-											{`${contentItem.meta.lastEditor?.firstname} ${contentItem.meta.lastEditor?.lastname}`}
+											{contentItem.meta.lastEditor?.firstname
+												? `${contentItem.meta.lastEditor?.firstname} ${contentItem.meta.lastEditor?.lastname}`
+												: 'Onbekend'}
 										</p>
 									</div>
 								)}

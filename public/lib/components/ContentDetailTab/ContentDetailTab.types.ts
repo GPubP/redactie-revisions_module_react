@@ -23,3 +23,12 @@ export enum RestoreModalContext {
 	'NORMAL' = 'NORMAL',
 	'LINKED' = 'LINKED',
 }
+
+export const ContentStateMapping: Record<string, string> = {
+	NEW: 'Nieuw',
+	DRAFT: 'Werkversie',
+	PENDING_REVIEW: 'Klaar voor nakijken',
+	PENDING_PUBLISH: 'Klaar voor publicatie',
+	PUBLISHED: 'Gepubliceerd',
+	UNPUBLISHED: 'Gearchiveerd',
+};
