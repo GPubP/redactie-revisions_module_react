@@ -5,6 +5,9 @@ export interface RevisionTableRow {
 	workflowState: string;
 	checked: boolean;
 	toggled: boolean;
+	lastPublished?: boolean;
+	lastArchived?: boolean;
+	classList?: string[];
 	parentIndex?: number;
 	children?: RevisionTableRow[];
 	onRenderRevisions?: (rows: RevisionTableRow[], rowData: RevisionTableRow) => void;
@@ -13,4 +16,10 @@ export interface RevisionTableRow {
 export interface RevisionForm {
 	rows: RevisionTableRow[];
 	selectedRows: string[];
+	detailId: string;
+}
+
+export enum RestoreModalContext {
+	'NORMAL' = 'NORMAL',
+	'LINKED' = 'LINKED',
 }
