@@ -125,7 +125,7 @@ export class RevisionsFacade extends BaseEntityFacade<
 				alertService.danger(
 					{
 						title: 'Er ging iets mis',
-						message: `Terugzetten van revisie is mislukt`,
+						message: 'Terugzetten van revisie is mislukt',
 					},
 					{
 						containerId: 'content-detail',
