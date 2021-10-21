@@ -26,13 +26,12 @@ import { REVISION_COLUMNS, REVISIONS_QUERY_PARAMS_CONFIG } from './ContentDetail
 import './ContentDetailTab.scss';
 import { RestoreModalContext, RevisionForm, RevisionTableRow } from './ContentDetailTab.types';
 
-// TODO: bump content module and remove any
 const ContentDetailTab: FC<ExternalTabProps> = ({
 	siteId,
 	contentId,
 	contentType,
 	contentItem,
-}: any) => {
+}) => {
 	const [selectedRevisions, setSelectedRevisions] = useState<string[]>([]);
 	const [showRevisionModal, setShowRevisionModal] = useState<boolean>(false);
 	const [showConfirmRestoreModal, setShowConfirmRestoreModal] = useState(false);
@@ -68,17 +67,13 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 	const {
 		loading: statusesLoading,
 		pagination: statusesPagination,
-		// TODO: bump workflow module and remove any
-	} = (WorkflowsConnector.hooks as any).usePaginatedWorkflowStatuses({
+	} = WorkflowsConnector.hooks.usePaginatedWorkflowStatuses({
 		page: 1,
 		pagesize: -1,
 	});
 
 	useEffect(() => {
-		if (
-			revisionsLoadingState !== LoadingState.Loading &&
-			statusesLoading !== LoadingState.Loading
-		) {
+		if (revisionsLoadingState !== LoadingState.Loading && statusesLoading) {
 			setInitialLoading(LoadingState.Loaded);
 		}
 	}, [revisionsLoadingState, statusesLoading]);
@@ -142,10 +137,10 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 	): RevisionTableRow => {
 		return {
 			id: revision.uuid,
-			workflowState: statusesPagination.data.find(
-				// TODO: bump workflows modules and remove any
-				(status: any) => status.data.systemName === revision.meta.data.workflowStateName
-			)?.data.name,
+			workflowState:
+				statusesPagination?.data.find(
+					status => status.data.systemName === revision.meta.data.workflowStateName
+				)?.data.name || '',
 			lastEditor: `${revision.meta.user.firstname} ${revision.meta.user.lastname}`,
 			checked: false,
 			toggled: !!lastPublished && index === 0,

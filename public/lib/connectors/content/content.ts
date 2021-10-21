@@ -11,10 +11,10 @@ export const registerContentDetailTab = (key: string, options: ExternalTabOption
 export const getViewPropsByCT = (
 	contentType: ContentTypeSchema,
 	values: FormikValues
-): { schema: FormSchema; values: FormikValues } =>
-	contentModuleAPI ? (contentModuleAPI as any).getViewPropsByCT(contentType, values) : false; // TODO: bump content module and remove any
+): { schema: FormSchema; values: FormikValues } | undefined =>
+	contentModuleAPI ? contentModuleAPI.getViewPropsByCT(contentType, values) : undefined;
 
-export const getContentItem = (siteId: string, contentItemId: string): Promise<void> | false =>
+export const getContentItem = (siteId: string, contentItemId: string): void | false =>
 	contentModuleAPI
-		? (contentModuleAPI as any).store.content.facade.getContentItem(siteId, contentItemId)
-		: false; // TODO: bump content module and remove any
+		? contentModuleAPI.store.content.facade.getContentItem(siteId, contentItemId)
+		: false;
