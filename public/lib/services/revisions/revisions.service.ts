@@ -29,7 +29,7 @@ export class RevisionsApiService {
 	): Promise<ContentSchema | null> {
 		return api
 			.get(
-				`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${contentId}/revisions/${revisionId}/preview?`
+				`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${contentId}/revisions/${revisionId}/preview`
 			)
 			.json();
 	}

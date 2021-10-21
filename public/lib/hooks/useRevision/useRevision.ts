@@ -10,10 +10,9 @@ const useRevision: UseRevision = () => {
 	const preview = useObservable(revisionsFacade.preview$, null);
 	const error = useObservable(revisionsFacade.error$, null);
 
-	const loadingState = error ? LoadingState.Error : loading;
 	const updatingState = error ? LoadingState.Error : updating;
 
-	return [loadingState, updatingState, preview];
+	return [loading, updatingState, preview];
 };
 
 export default useRevision;
