@@ -176,9 +176,6 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 			return;
 		}
 
-		console.log(sinceLastPublished);
-		console.log(revisions);
-
 		let highlightFound = false;
 
 		const rows = [...sinceLastPublished, ...revisions].map((revision, index) => {
@@ -198,8 +195,6 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 
 			return row;
 		});
-
-		console.log(rows);
 
 		setFormInitialValue({
 			...formInitialValue,
