@@ -4,6 +4,7 @@ import { RevisionsModel } from '../../store/revisions';
 
 export type UseRevisions = () => [
 	LoadingState,
+	LoadingState,
 	RevisionsModel[],
 	RevisionsModel[] | null,
 	Page | null | undefined

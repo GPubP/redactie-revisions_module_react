@@ -10,5 +10,6 @@ export interface RevisionsState extends BaseEntityState<RevisionsModel, string> 
 	meta?: Page;
 	preview: ContentSchema;
 	isFetchingPreview: LoadingState;
+	isFetchingLastPublished: LoadingState;
 	isRestoringRevision: LoadingState;
 }

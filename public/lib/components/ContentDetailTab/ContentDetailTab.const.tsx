@@ -14,10 +14,12 @@ export const REVISION_COLUMNS = (
 	{ selectedRows }: RevisionForm,
 	setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void,
 	onRenderChildren?: (rowData: RevisionTableRow) => void
-): TableColumn<RevisionTableRow>[] => {
+	// TODO: bump utils and remove any
+): TableColumn<RevisionTableRow>[] | any => {
 	return [
 		{
-			label: '',
+			label: 'dropdown',
+			hideLabel: true,
 			disableSorting: true,
 			classList: ['a-revision-table-column__chevron'],
 			component(value: string, rowData: RevisionTableRow, rowIndex: number) {
@@ -49,12 +51,14 @@ export const REVISION_COLUMNS = (
 			},
 		},
 		{
-			label: '',
+			label: 'checkbox',
+			hideLabel: true,
 			disableSorting: true,
 			classList: ['a-revision-table-column__checkbox'],
 			component(
 				value: string,
-				{ checked, id, parentIndex, lastArchived, lastPublished },
+				// TODO: bump utils and remove any
+				{ checked, id, parentIndex, lastArchived, lastPublished }: any,
 				rowIndex: number
 			) {
 				const field =
@@ -105,7 +109,8 @@ export const REVISION_COLUMNS = (
 			value: 'date',
 			disableSorting: true,
 			classList: ['a-revision-table-column__date'],
-			component(value: string, { id }) {
+			// TODO: bump utils and remove any
+			component(value: string, { id }: any) {
 				return (
 					<p
 						className="a-revision-date"

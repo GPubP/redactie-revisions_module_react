@@ -46,7 +46,13 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 		selectedRows: [],
 		detailId: '',
 	});
-	const [revisionsLoadingState, revisions, sinceLastPublished, paging] = useRevisions();
+	const [
+		revisionsLoadingState,
+		lastPublishedLoadingState,
+		revisions,
+		sinceLastPublished,
+		paging,
+	] = useRevisions();
 	const [previewLoadingState, restoringState, preview] = useRevision();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const View = getView();
@@ -164,10 +170,14 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 			isEmpty(revisions) ||
 			!sinceLastPublished ||
 			!statusesPagination ||
-			initialLoading === LoadingState.Loading
+			initialLoading === LoadingState.Loading ||
+			lastPublishedLoadingState === LoadingState.Loading
 		) {
 			return;
 		}
+
+		console.log(sinceLastPublished);
+		console.log(revisions);
 
 		let highlightFound = false;
 
@@ -188,6 +198,8 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 
 			return row;
 		});
+
+		console.log(rows);
 
 		setFormInitialValue({
 			...formInitialValue,
