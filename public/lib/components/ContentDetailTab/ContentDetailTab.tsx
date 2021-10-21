@@ -73,7 +73,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 	});
 
 	useEffect(() => {
-		if (revisionsLoadingState !== LoadingState.Loading && statusesLoading) {
+		if (revisionsLoadingState !== LoadingState.Loading && !statusesLoading) {
 			setInitialLoading(LoadingState.Loaded);
 		}
 	}, [revisionsLoadingState, statusesLoading]);
