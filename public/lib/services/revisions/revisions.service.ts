@@ -5,7 +5,7 @@ import { RevisionsSearchParams } from '../../store/revisions/revisions.types';
 import { api } from '../api';
 import { SITE_REQUEST_PREFIX_URL } from '../api/api.service.const';
 
-import { RevisionsResponse } from './revisions.service.types';
+import { Revision, RevisionsResponse } from './revisions.service.types';
 
 export class RevisionsApiService {
 	public getRevisions(
@@ -38,10 +38,10 @@ export class RevisionsApiService {
 		siteId: string,
 		contentId: string,
 		revisionId: string
-	): Promise<ContentSchema | null> {
+	): Promise<Revision | null> {
 		return api
 			.put(
-				`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${contentId}/revisions/${revisionId}/rollback`
+				`${SITE_REQUEST_PREFIX_URL}/${siteId}/content/${contentId}/revisions/${revisionId}/rollback?skipPopulateLastEditor=false`
 			)
 			.json();
 	}

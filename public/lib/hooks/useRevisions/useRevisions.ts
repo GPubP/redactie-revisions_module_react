@@ -11,7 +11,7 @@ const useRevisions: UseRevisions = () => {
 		LoadingState.Loading
 	);
 	const revisions = useObservable(revisionsFacade.revisions$, []);
-	const sinceLastPublished = useObservable(revisionsFacade.sinceLastPublished$, null);
+	const sinceLastPublished = useObservable(revisionsFacade.sinceLastPublished$, []);
 	const meta = useObservable(revisionsFacade.meta$, null);
 	const error = useObservable(revisionsFacade.error$, null);
 
