@@ -44,7 +44,11 @@ export class RevisionsFacade extends BaseEntityFacade<
 				if (searchParams.sinceLastPublished) {
 					this.store.update({
 						sinceLastPublished: response._embedded,
-						isFetchingLastPublished: LoadingState.Loaded,
+					});
+					setTimeout(() => {
+						this.store.update({
+							isFetchingLastPublished: LoadingState.Loaded,
+						});
 					});
 					return;
 				}

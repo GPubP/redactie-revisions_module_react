@@ -181,6 +181,9 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 			return;
 		}
 
+		console.log(sinceLastPublished);
+		console.log(lastPublishedLoadingState);
+
 		let highlightFound = false;
 
 		const rows = [...sinceLastPublished, ...revisions].map((revision, index) => {
