@@ -112,11 +112,16 @@ export class RevisionsFacade extends BaseEntityFacade<
 					return;
 				}
 
+				const { sinceLastPublished } = this.store.getValue();
 				this.store.update({
-					preview: response,
+					sinceLastPublished: [response, ...sinceLastPublished],
+				});
+
+				this.store.update({
 					isRestoringRevision: LoadingState.Loaded,
 				});
-				alertService.danger(
+
+				alertService.success(
 					{
 						title: 'Revisie hersteld',
 						message: `Je hebt deze revisie van ${contentItemName} hersteld`,

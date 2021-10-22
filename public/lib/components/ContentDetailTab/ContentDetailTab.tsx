@@ -81,11 +81,11 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 		if (
 			revisionsLoadingState !== LoadingState.Loading &&
 			!statusesLoading &&
-			!isEmpty(formInitialValue.rows)
+			lastPublishedLoadingState !== LoadingState.Loading
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [formInitialValue.rows, revisionsLoadingState, statusesLoading]);
+	}, [lastPublishedLoadingState, revisionsLoadingState, statusesLoading]);
 
 	useEffect(() => {
 		if (!revisionId) {
@@ -174,9 +174,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 
 	useEffect(() => {
 		if (
-			!sinceLastPublished ||
-			!statusesPagination ||
-			revisionsLoadingState !== LoadingState.Loading ||
+			revisionsLoadingState === LoadingState.Loading ||
 			lastPublishedLoadingState === LoadingState.Loading ||
 			statusesLoading
 		) {
@@ -215,10 +213,8 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [
-		contentId,
 		revisions,
 		sinceLastPublished,
-		siteId,
 		statusesPagination,
 		statusesLoading,
 		revisionsLoadingState,
@@ -235,6 +231,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 	const onCloseRevisionModal = (): void => {
 		setRestoreModalContext(RestoreModalContext.NORMAL);
 		setShowRevisionModal(false);
+		setRevisionId('');
 	};
 
 	const onCloseRestoreModal = (): void => {
@@ -248,12 +245,12 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 	};
 
 	const onRestore = async (): Promise<void> => {
-		const id = showRevisionModal ? (revisionId as string) : selectedRevisions[0];
+		const id = revisionId ? revisionId : selectedRevisions[0];
 
 		await revisionsFacade
 			.restoreRevision(siteId, contentId, id, contentItem.meta.label)
-			.then(async () => {
-				await getContentItem(siteId, contentId);
+			.then(() => {
+				getContentItem(siteId, contentId);
 			});
 		setShowConfirmRestoreModal(false);
 		setRestoreModalContext(RestoreModalContext.NORMAL);
@@ -296,7 +293,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 			return date;
 		};
 
-		setSelectedRevisionDate(findNestedDate(revisions));
+		setSelectedRevisionDate(findNestedDate([...sinceLastPublished, ...revisions]));
 	};
 
 	const onChangeForm = ({ selectedRows, detailId }: FormikValues): void => {
@@ -326,7 +323,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 				columns={REVISION_COLUMNS}
 				initialToggledRows={initialToggledRows}
 			></ExpandableTable>
-			{initialLoading !== LoadingState.Loading && (
+			{initialLoading !== LoadingState.Loading && !!formInitialValue.rows.length && (
 				<div className="row u-margin-top u-flex-justify-center">
 					<Button
 						onClick={loadMore}

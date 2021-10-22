@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, CardTitle } from '@acpaas-ui/react-components';
 import { ControlledModal, ControlledModalBody } from '@acpaas-ui/react-editorial-components';
-import { DataLoader } from '@redactie/utils';
+import { DataLoader, LoadingState } from '@redactie/utils';
 import classnames from 'classnames/bind';
 import moment from 'moment';
 import { isEmpty } from 'ramda';
@@ -102,8 +102,10 @@ const RevisionModal: FC<RevisionModalProps> = ({
 					)}
 					<Button
 						className={cx('u-margin-top')}
-						iconLeft={restoring ? 'circle-o-notch fa-spin' : ''}
-						disabled={restoring}
+						iconLeft={
+							restoring === LoadingState.Updating ? 'circle-o-notch fa-spin' : ''
+						}
+						disabled={restoring === LoadingState.Updating}
 						onClick={onRestore}
 						type="primary"
 					>

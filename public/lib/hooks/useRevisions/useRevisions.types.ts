@@ -6,6 +6,6 @@ export type UseRevisions = () => [
 	LoadingState,
 	LoadingState,
 	RevisionsModel[],
-	RevisionsModel[] | null,
+	RevisionsModel[],
 	Page | null | undefined
 ];
