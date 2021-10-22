@@ -1,4 +1,3 @@
-import { ContentStatus } from '@redactie/content-module';
 import { EmbeddedResponse } from '@redactie/utils';
 
 export interface RevisionUser {
@@ -18,7 +17,7 @@ export interface RevisionUser {
 export interface RevisionMeta {
 	created: string;
 	data: {
-		state: ContentStatus;
+		state: string;
 		workflowStateName: string;
 	};
 	ref: string;
