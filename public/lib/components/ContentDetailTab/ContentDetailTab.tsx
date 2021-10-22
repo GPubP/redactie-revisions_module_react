@@ -52,7 +52,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 	});
 	const [
 		revisionsLoadingState,
-		lastPublishedLoadingState,
+		sinceLastPublishedLoadingState,
 		revisions,
 		sinceLastPublished,
 		paging,
@@ -81,11 +81,11 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 		if (
 			revisionsLoadingState !== LoadingState.Loading &&
 			!statusesLoading &&
-			lastPublishedLoadingState !== LoadingState.Loading
+			sinceLastPublishedLoadingState !== LoadingState.Loading
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [lastPublishedLoadingState, revisionsLoadingState, statusesLoading]);
+	}, [sinceLastPublishedLoadingState, revisionsLoadingState, statusesLoading]);
 
 	useEffect(() => {
 		if (!revisionId) {
@@ -175,7 +175,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 	useEffect(() => {
 		if (
 			revisionsLoadingState === LoadingState.Loading ||
-			lastPublishedLoadingState === LoadingState.Loading ||
+			sinceLastPublishedLoadingState === LoadingState.Loading ||
 			statusesLoading
 		) {
 			return;
@@ -218,7 +218,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 		statusesPagination,
 		statusesLoading,
 		revisionsLoadingState,
-		lastPublishedLoadingState,
+		sinceLastPublishedLoadingState,
 	]);
 
 	const loadMore = (): void => {

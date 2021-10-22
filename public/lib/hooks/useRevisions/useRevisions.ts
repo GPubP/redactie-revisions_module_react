@@ -7,7 +7,7 @@ import { UseRevisions } from './useRevisions.types';
 const useRevisions: UseRevisions = () => {
 	const loading = useObservable(revisionsFacade.isFetching$, LoadingState.Loading);
 	const loadingLastPublished = useObservable(
-		revisionsFacade.isFetchingLastPublished$,
+		revisionsFacade.isFetchingSinceLastPublished$,
 		LoadingState.Loading
 	);
 	const revisions = useObservable(revisionsFacade.revisions$, []);
