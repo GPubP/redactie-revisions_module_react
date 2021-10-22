@@ -250,6 +250,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 		await revisionsFacade
 			.restoreRevision(siteId, contentId, id, contentItem.meta.label)
 			.then(() => {
+				setInitialToggledRows({});
 				getContentItem(siteId, contentId);
 			});
 		setShowConfirmRestoreModal(false);
