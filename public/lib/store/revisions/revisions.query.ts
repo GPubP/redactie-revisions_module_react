@@ -25,7 +25,7 @@ export class RevisionsQuery extends BaseEntityQuery<RevisionsState> {
 	public isFetchingPreview$ = this.select(state => state.isFetchingPreview).pipe(
 		distinctUntilChanged()
 	);
-	public isFetchingLastPublished$ = this.select(state => state.isFetchingLastPublished).pipe(
+	public isFetchingSinceLastPublished$ = this.select(state => state.isFetchingSinceLastPublished).pipe(
 		distinctUntilChanged()
 	);
 	public isRestoringRevision$ = this.select(state => state.isRestoringRevision).pipe(

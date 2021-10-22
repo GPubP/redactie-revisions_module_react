@@ -16,7 +16,7 @@ export class RevisionsFacade extends BaseEntityFacade<
 	public readonly meta$ = this.query.meta$;
 	public readonly preview$ = this.query.preview$;
 	public readonly isFetchingPreview$ = this.query.isFetchingPreview$;
-	public readonly isFetchingLastPublished$ = this.query.isFetchingLastPublished$;
+	public readonly isFetchingSinceLastPublished$ = this.query.isFetchingSinceLastPublished$;
 	public readonly isRestoringRevision$ = this.query.isRestoringRevision$;
 
 	/**
@@ -30,7 +30,7 @@ export class RevisionsFacade extends BaseEntityFacade<
 	): Promise<void> {
 		searchParams.sinceLastPublished
 			? this.store.update({
-					isFetchingLastPublished: LoadingState.Loading,
+					isFetchingSinceLastPublished: LoadingState.Loading,
 			  })
 			: this.store.setIsFetching(true);
 
@@ -47,7 +47,7 @@ export class RevisionsFacade extends BaseEntityFacade<
 					});
 					setTimeout(() => {
 						this.store.update({
-							isFetchingLastPublished: LoadingState.Loaded,
+							isFetchingSinceLastPublished: LoadingState.Loaded,
 						});
 					});
 					return;
@@ -68,7 +68,7 @@ export class RevisionsFacade extends BaseEntityFacade<
 					...(!searchParams.sinceLastPublished
 						? { isFetching: false }
 						: {
-								isFetchingLastPublished: LoadingState.Loaded,
+								isFetchingSinceLastPublished: LoadingState.Loaded,
 						  }),
 				});
 			});
