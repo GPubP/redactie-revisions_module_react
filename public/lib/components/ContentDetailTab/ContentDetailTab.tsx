@@ -8,7 +8,7 @@ import {
 	ControlledModalHeader,
 } from '@acpaas-ui/react-editorial-components';
 import { ExternalTabProps } from '@redactie/content-module';
-import { LoadingState, useAPIQueryParams } from '@redactie/utils';
+import { AlertContainer, LoadingState, useAPIQueryParams } from '@redactie/utils';
 import { FormikValues } from 'formik';
 import moment from 'moment';
 import { isEmpty } from 'ramda';
@@ -18,7 +18,7 @@ import { ExpandableTable, RevisionModal } from '../../components';
 import { getContentItem, getViewPropsByCT, WorkflowsConnector } from '../../connectors';
 import { getView } from '../../connectors/formRenderer';
 import { useRevision, useRevisions } from '../../hooks';
-import { DATE_FORMATS } from '../../revisions.const';
+import { ALERT_CONTAINER_IDS, DATE_FORMATS } from '../../revisions.const';
 import { Revision } from '../../services/revisions/revisions.service.types';
 import { revisionPreviewsFacade } from '../../store/revisionPreviews';
 import { revisionsFacade } from '../../store/revisions';
@@ -324,6 +324,10 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 
 	return (
 		<div>
+			<AlertContainer
+				toastClassName="u-margin-bottom"
+				containerId={ALERT_CONTAINER_IDS.overview}
+			/>
 			<p>
 				Selecteer één revisie om ze te bekijken of terug te zetten. Selecteer twee revisies
 				om ze met elkaar te vergelijken.
