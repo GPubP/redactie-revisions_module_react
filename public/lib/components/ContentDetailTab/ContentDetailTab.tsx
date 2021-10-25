@@ -20,6 +20,7 @@ import { getView } from '../../connectors/formRenderer';
 import { useRevision, useRevisions } from '../../hooks';
 import { DATE_FORMATS } from '../../revisions.const';
 import { Revision } from '../../services/revisions/revisions.service.types';
+import { revisionPreviewsFacade } from '../../store/revisionPreviews';
 import { revisionsFacade } from '../../store/revisions';
 
 import { REVISION_COLUMNS, REVISIONS_QUERY_PARAMS_CONFIG } from './ContentDetailTab.const';
@@ -57,7 +58,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 		sinceLastPublished,
 		paging,
 	] = useRevisions();
-	const [previewLoadingState, restoringState, preview] = useRevision();
+	const [previewLoadingState, restoringState, preview, previewError] = useRevision();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const View = getView();
 	const [query, setQuery] = useAPIQueryParams(REVISIONS_QUERY_PARAMS_CONFIG, false);
@@ -87,11 +88,21 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 		}
 	}, [sinceLastPublishedLoadingState, revisionsLoadingState, statusesLoading]);
 
+	const getPreview = async (): Promise<void> => {
+		if (!revisionId) {
+			return;
+		}
+
+		await revisionPreviewsFacade.getRevisionPreview(siteId, contentId, revisionId);
+		revisionPreviewsFacade.setActiveRevisionPreview(revisionId);
+	};
+
 	useEffect(() => {
 		if (!revisionId) {
 			return;
 		}
-		revisionsFacade.getRevision(siteId, contentId, revisionId);
+		getPreview();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [contentId, revisionId, siteId]);
 
 	useEffect(() => {
@@ -397,6 +408,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 				show={showRevisionModal}
 				loading={previewLoadingState}
 				restoring={restoringState}
+				error={previewError}
 				onClose={onCloseRevisionModal}
 				onRestore={onOpenRestoreModal}
 			></RevisionModal>

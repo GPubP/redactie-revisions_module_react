@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, CardTitle } from '@acpaas-ui/react-components';
+import { Button, Card, CardBody, CardDescription, CardTitle } from '@acpaas-ui/react-components';
 import { ControlledModal, ControlledModalBody } from '@acpaas-ui/react-editorial-components';
 import { DataLoader, LoadingState } from '@redactie/utils';
 import moment from 'moment';
@@ -17,6 +17,7 @@ const RevisionModal: FC<RevisionModalProps> = ({
 	contentItem,
 	View,
 	viewProps,
+	error,
 	onClose,
 	onRestore,
 }): ReactElement => {
@@ -105,6 +106,21 @@ const RevisionModal: FC<RevisionModalProps> = ({
 		);
 	};
 
+	const renderError = (): ReactElement => {
+		return (
+			<div className="u-margin-top">
+				<Card>
+					<CardBody>
+						<CardTitle>Er ging iets mis</CardTitle>
+						<CardDescription>
+							Er ging iets mis bij het ophalen van deze preview.
+						</CardDescription>
+					</CardBody>
+				</Card>
+			</div>
+		);
+	};
+
 	return (
 		<>
 			<ControlledModal
@@ -114,7 +130,7 @@ const RevisionModal: FC<RevisionModalProps> = ({
 				className="o-revision-modal"
 			>
 				<ControlledModalBody>
-					<DataLoader loadingState={loading} render={renderBody} />
+					<DataLoader loadingState={loading} render={!error ? renderBody : renderError} />
 				</ControlledModalBody>
 			</ControlledModal>
 		</>
