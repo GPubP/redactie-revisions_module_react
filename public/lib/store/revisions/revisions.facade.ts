@@ -1,5 +1,6 @@
 import { alertService, BaseEntityFacade, LoadingState } from '@redactie/utils';
 
+import { ALERT_CONTAINER_IDS } from '../../revisions.const';
 import { revisionsApiService, RevisionsApiService } from '../../services/revisions';
 
 import { revisionsQuery, RevisionsQuery } from './revisions.query';
@@ -104,7 +105,7 @@ export class RevisionsFacade extends BaseEntityFacade<
 						message: `Je hebt deze revisie van ${contentItemName} hersteld`,
 					},
 					{
-						containerId: 'content-detail',
+						containerId: ALERT_CONTAINER_IDS.overview,
 					}
 				);
 			})
@@ -119,7 +120,7 @@ export class RevisionsFacade extends BaseEntityFacade<
 						message: 'Terugzetten van revisie is mislukt',
 					},
 					{
-						containerId: 'content-detail',
+						containerId: ALERT_CONTAINER_IDS.overview,
 					}
 				);
 			});
