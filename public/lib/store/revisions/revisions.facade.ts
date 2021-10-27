@@ -14,8 +14,6 @@ export class RevisionsFacade extends BaseEntityFacade<
 	public readonly sinceLastPublished$ = this.query.sinceLastPublished$;
 	public readonly revisions$ = this.query.revisions$;
 	public readonly meta$ = this.query.meta$;
-	public readonly preview$ = this.query.preview$;
-	public readonly isFetchingPreview$ = this.query.isFetchingPreview$;
 	public readonly isFetchingSinceLastPublished$ = this.query.isFetchingSinceLastPublished$;
 	public readonly isRestoringRevision$ = this.query.isRestoringRevision$;
 
@@ -70,31 +68,6 @@ export class RevisionsFacade extends BaseEntityFacade<
 						: {
 								isFetchingSinceLastPublished: LoadingState.Loaded,
 						  }),
-				});
-			});
-	}
-
-	public async getRevision(siteId: string, contentId: string, revisionId: string): Promise<void> {
-		this.store.update({
-			isFetchingPreview: LoadingState.Loading,
-		});
-
-		return this.service
-			.getRevisionPreview(siteId, contentId, revisionId)
-			.then(response => {
-				if (!response) {
-					return;
-				}
-
-				this.store.update({
-					preview: response,
-					isFetchingPreview: LoadingState.Loaded,
-				});
-			})
-			.catch(error => {
-				this.store.update({
-					error,
-					isFetchingPreview: LoadingState.Loaded,
 				});
 			});
 	}
