@@ -1,6 +1,6 @@
 {
   "name": "@redactie/revisions-module",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "redactie revisions module",
   "main": "dist/redactie-revisions-module.umd.js",
   "module": "dist/redactie-revisions-module.umd.js",
