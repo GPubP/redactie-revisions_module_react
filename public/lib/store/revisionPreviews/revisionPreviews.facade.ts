@@ -14,6 +14,10 @@ export class RevisionPreviewsFacade extends BaseEntityFacade<
 > {
 	public readonly active$ = this.query.active$ as Observable<ContentSchema | undefined>;
 
+	public selectRevisionPreview$(revisionId: string): Observable<ContentSchema | undefined> {
+		return this.query.selectRevisionPreview$(revisionId);
+	}
+
 	/**
 	 * API integration
 	 */
@@ -52,10 +56,6 @@ export class RevisionPreviewsFacade extends BaseEntityFacade<
 
 	public setActiveRevisionPreview(revisionId: string): void {
 		this.store.setActive(revisionId);
-	}
-
-	public getRevisionPreviewContent(revisionId: string): ContentSchema | undefined {
-		return this.query.getRevisionPreview(revisionId);
 	}
 }
 

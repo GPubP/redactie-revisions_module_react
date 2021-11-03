@@ -8,7 +8,7 @@ import {
 	ControlledModalHeader,
 } from '@acpaas-ui/react-editorial-components';
 import { ExternalTabProps } from '@redactie/content-module';
-import { AlertContainer, LoadingState, useAPIQueryParams } from '@redactie/utils';
+import { AlertContainer, LoadingState, useAPIQueryParams, useNavigate } from '@redactie/utils';
 import { FormikValues } from 'formik';
 import moment from 'moment';
 import { isEmpty } from 'ramda';
@@ -18,7 +18,7 @@ import { ExpandableTable, RevisionModal } from '../../components';
 import { getContentItem, getViewPropsByCT, WorkflowsConnector } from '../../connectors';
 import { getView } from '../../connectors/formRenderer';
 import { useRevision, useRevisions } from '../../hooks';
-import { ALERT_CONTAINER_IDS, DATE_FORMATS } from '../../revisions.const';
+import { ALERT_CONTAINER_IDS, DATE_FORMATS, MODULE_PATHS, SITES_ROOT } from '../../revisions.const';
 import { Revision } from '../../services/revisions/revisions.service.types';
 import { revisionPreviewsFacade } from '../../store/revisionPreviews';
 import { revisionsFacade } from '../../store/revisions';
@@ -38,7 +38,6 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 	contentType,
 	contentItem,
 }) => {
-	const [selectedRevisions, setSelectedRevisions] = useState<string[]>([]);
 	const [showRevisionModal, setShowRevisionModal] = useState<boolean>(false);
 	const [showConfirmRestoreModal, setShowConfirmRestoreModal] = useState(false);
 	const [restoreModalContext, setRestoreModalContext] = useState<RestoreModalContext>(
@@ -46,11 +45,6 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 	);
 	const [revisionId, setRevisionId] = useState<string>();
 	const [selectedRevisionDate, setSelectedRevisionDate] = useState<string>();
-	const [formInitialValue, setFormInitialValue] = useState<RevisionForm>({
-		rows: [],
-		selectedRows: [],
-		detailId: '',
-	});
 	const [
 		revisionsLoadingState,
 		sinceLastPublishedLoadingState,
@@ -61,7 +55,16 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 	const [previewLoadingState, restoringState, preview, previewError] = useRevision();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const View = getView();
+	const { navigate } = useNavigate(SITES_ROOT);
 	const [query, setQuery] = useAPIQueryParams(REVISIONS_QUERY_PARAMS_CONFIG, false);
+	const [selectedRevisions, setSelectedRevisions] = useState<string[]>(
+		query.from && query.to ? [query.from, query.to] : []
+	);
+	const [formInitialValue, setFormInitialValue] = useState<RevisionForm>({
+		rows: [],
+		selectedRows: query.from && query.to ? [query.from, query.to] : [],
+		detailId: '',
+	});
 	const [initialToggledRows, setInitialToggledRows] = useState<Record<string, boolean>>({});
 	const viewProps = useMemo(() => {
 		if (!preview || !contentType) {
@@ -146,7 +149,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 			pagesize: REVISIONS_QUERY_PARAMS_CONFIG.pagesize.defaultValue,
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [query]);
+	}, [query.page]);
 
 	const pickProps = (
 		revision: Revision,
@@ -155,6 +158,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 		lastPublished?: boolean,
 		lastArchived?: boolean
 	): RevisionTableRow => {
+		const isChecked = query.from === revision.uuid || query.to === revision.uuid;
 		return {
 			id: revision.uuid,
 			workflowState:
@@ -164,12 +168,13 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 			lastEditor: revision.meta.user.firstname
 				? `${revision.meta.user.firstname} ${revision.meta.user.lastname}`
 				: 'Onbekend',
-			checked: false,
+			checked: isChecked,
 			toggled: !!lastPublished && index === 0 && !isEmpty(revision.children),
 			date: revision.meta.created,
 			lastPublished,
 			lastArchived,
 			classList: [
+				...(isChecked ? ['a-revision-table-row--blue'] : []),
 				...(lastPublished ? ['a-revision-table-row--green'] : []),
 				...(lastArchived ? ['a-revision-table-row--red'] : []),
 			],
@@ -270,7 +275,21 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 
 	const submitAction = (): void => {
 		if (selectedRevisions.length >= 2) {
-			// TODO: implement vergelijk
+			navigate(
+				MODULE_PATHS.contentDetailExternalChild,
+				{
+					siteId,
+					contentId,
+					contentTypeId: contentType.uuid,
+					tab: 'revisions',
+					child: `vergelijk`,
+				},
+				{},
+				new URLSearchParams({
+					from: selectedRevisions[0],
+					to: selectedRevisions[1],
+				})
+			);
 			return;
 		}
 
@@ -310,6 +329,11 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 
 	const onChangeForm = ({ selectedRows, detailId }: FormikValues): void => {
 		if (selectedRows !== selectedRevisions) {
+			setQuery({
+				...query,
+				from: selectedRows[0],
+				to: selectedRows[1],
+			});
 			setSelectedRevisions(selectedRows);
 			findDate(selectedRows.length === 1 ? selectedRows[0] : null);
 			return;

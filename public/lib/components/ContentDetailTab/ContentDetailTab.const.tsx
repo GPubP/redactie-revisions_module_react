@@ -140,4 +140,6 @@ export const REVISION_COLUMNS = (
 export const REVISIONS_QUERY_PARAMS_CONFIG = {
 	page: { defaultValue: 1, type: 'number' },
 	pagesize: { defaultValue: 5, type: 'number' },
+	from: { defaultValue: '', type: 'string' },
+	to: { defaultValue: '', type: 'string' },
 } as const;
