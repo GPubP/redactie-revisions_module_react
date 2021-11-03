@@ -1,1 +1,1 @@
-export { default as ContentTypeDetailTab } from './ContentDetailTab';
+export { default as ContentDetailTab } from './ContentDetailTab';
