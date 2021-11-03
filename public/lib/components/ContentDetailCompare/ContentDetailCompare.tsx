@@ -1,4 +1,4 @@
-import { ExternalTabProps } from '@redactie/content-module';
+import { ContentSchema, ExternalTabProps } from '@redactie/content-module';
 import { FormSchema } from '@redactie/form-renderer-module';
 import { useAPIQueryParams, useNavigate } from '@redactie/utils';
 import { FormikValues } from 'formik';
@@ -68,8 +68,8 @@ const ContentDetailCompare: FC<ExternalTabProps> = ({ siteId, contentId, content
 					schema={fromViewProps?.schema as FormSchema}
 					fromValues={fromViewProps?.values as FormikValues}
 					toValues={toViewProps?.values as FormikValues}
-					fromMeta={fromPreview?.meta as any} // TODO: fix types
-					toMeta={toPreview?.meta as any}
+					fromMeta={fromPreview?.meta as any} // TODO: fix any
+					toMeta={toPreview?.meta as any} // TODO: fix any
 				/>
 			)}
 		</div>
