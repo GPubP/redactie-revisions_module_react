@@ -1,5 +1,7 @@
 import { ExternalTabProps } from '@redactie/content-module';
+import { FormSchema } from '@redactie/form-renderer-module';
 import { useAPIQueryParams, useNavigate } from '@redactie/utils';
+import { FormikValues } from 'formik';
 import React, { FC, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -61,13 +63,15 @@ const ContentDetailCompare: FC<ExternalTabProps> = ({ siteId, contentId, content
 			>
 				Terug naar overzicht
 			</Link>
-			<CompareView
-				schema={fromViewProps?.schema}
-				fromValues={fromViewProps?.values}
-				toValues={toViewProps?.values}
-				fromMeta={fromPreview?.meta}
-				toMeta={toPreview?.meta}
-			/>
+			{CompareView && (
+				<CompareView
+					schema={fromViewProps?.schema as FormSchema}
+					fromValues={fromViewProps?.values as FormikValues}
+					toValues={toViewProps?.values as FormikValues}
+					fromMeta={fromPreview?.meta as any} // TODO: fix types
+					toMeta={toPreview?.meta as any}
+				/>
+			)}
 		</div>
 	);
 };
