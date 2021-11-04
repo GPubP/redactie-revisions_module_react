@@ -286,8 +286,8 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 				},
 				{},
 				new URLSearchParams({
-					from: selectedRevisions[0],
-					to: selectedRevisions[1],
+					from: query.from || '',
+					to: query.to || '',
 				})
 			);
 			return;
@@ -302,7 +302,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 		setShowConfirmRestoreModal(true);
 	};
 
-	const findDate = (selectedRevisionId: string): void => {
+	const findDate = (selectedRevisionId: string): string => {
 		const findNestedDate = (r: Revision[]): string => {
 			let date = '';
 
@@ -324,19 +324,31 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 			return date;
 		};
 
-		setSelectedRevisionDate(findNestedDate([...sinceLastPublished, ...revisions]));
+		return findNestedDate([...sinceLastPublished, ...revisions]);
 	};
 
 	const onChangeForm = ({ selectedRows, detailId }: FormikValues): void => {
 		if (selectedRows !== selectedRevisions) {
+			setSelectedRevisions(selectedRows);
+		}
+
+		if (selectedRows.length === 1) {
 			setQuery({
 				...query,
 				from: selectedRows[0],
-				to: selectedRows[1],
 			});
-			setSelectedRevisions(selectedRows);
-			findDate(selectedRows.length === 1 ? selectedRows[0] : null);
-			return;
+			setSelectedRevisionDate(findDate(selectedRows.length === 1 ? selectedRows[0] : null));
+		}
+
+		if (selectedRows.length === 2) {
+			const selectedDate1 = findDate(selectedRows[0]);
+			const selectedDate2 = findDate(selectedRows[1]);
+
+			setQuery({
+				...query,
+				from: selectedDate1 > selectedDate2 ? selectedRows[1] : selectedRows[0],
+				to: selectedDate1 > selectedDate2 ? selectedRows[0] : selectedRows[1],
+			});
 		}
 
 		if (detailId) {

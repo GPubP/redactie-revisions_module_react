@@ -1,9 +1,10 @@
+import { Button } from '@acpaas-ui/react-components';
+import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { ContentSchema, ExternalTabProps } from '@redactie/content-module';
 import { FormSchema } from '@redactie/form-renderer-module';
 import { DataLoader, LoadingState, useAPIQueryParams, useNavigate } from '@redactie/utils';
 import { FormikValues } from 'formik';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 
 import { getCompareView, getViewPropsByCT } from '../../connectors';
 import { useRevision } from '../../hooks';
@@ -16,7 +17,7 @@ import './ContentDetailCompare.scss';
 
 const ContentDetailCompare: FC<ExternalTabProps> = ({ siteId, contentId, contentType }) => {
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const { generatePath } = useNavigate(SITES_ROOT);
+	const { navigate } = useNavigate(SITES_ROOT);
 	const [query] = useAPIQueryParams(COMPARE_REVISIONS_QUERY_PARAMS_CONFIG, false);
 	const [, , fromPreview] = useRevision(query.from);
 	const [, , toPreview] = useRevision(query.to);
@@ -69,26 +70,35 @@ const ContentDetailCompare: FC<ExternalTabProps> = ({ siteId, contentId, content
 		);
 	};
 
+	const navigateToOverview = (): void => {
+		navigate(
+			MODULE_PATHS.contentDetailExternal,
+			{
+				siteId,
+				contentId,
+				contentTypeId: contentType.uuid,
+				tab: 'revisions',
+			},
+			{},
+			new URLSearchParams({
+				from: query.from || '',
+				to: query.to || '',
+			})
+		);
+	};
+
 	return (
 		<div>
-			<Link
-				to={generatePath(
-					MODULE_PATHS.contentDetailExternal,
-					{
-						siteId,
-						contentId,
-						contentTypeId: contentType.uuid,
-						tab: 'revisions',
-					},
-					new URLSearchParams({
-						from: query.from || '',
-						to: query.to || '',
-					})
-				)}
-			>
-				Terug naar overzicht
-			</Link>
 			<DataLoader loadingState={initialLoading} render={renderView} />
+			<ActionBar className="o-action-bar--fixed" isOpen>
+				<ActionBarContentSection>
+					<div className="u-wrapper row end-xs">
+						<Button onClick={navigateToOverview} type="primary">
+							Terug naar overzicht
+						</Button>
+					</div>
+				</ActionBarContentSection>
+			</ActionBar>
 		</div>
 	);
 };
