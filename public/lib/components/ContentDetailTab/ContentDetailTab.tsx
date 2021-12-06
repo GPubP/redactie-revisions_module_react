@@ -364,10 +364,8 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 				toastClassName="u-margin-bottom"
 				containerId={ALERT_CONTAINER_IDS.overview}
 			/>
-			<p>
-				Selecteer één revisie om ze te bekijken of terug te zetten. Selecteer twee revisies
-				om ze met elkaar te vergelijken.
-			</p>
+			<p>Selecteer 1 revisie om ze te bekijken of terug te zetten.</p>
+			<p>Selecteer 2 revisies om met elkaar te vergelijken.</p>
 			<ExpandableTable<RevisionTableRow, RevisionForm>
 				initialValues={formInitialValue}
 				onChange={onChangeForm}
@@ -436,7 +434,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 							onClick={onRestore}
 							type={'success'}
 						>
-							Ja, oke
+							Ja, herstel
 						</Button>
 					</div>
 				</ControlledModalFooter>
