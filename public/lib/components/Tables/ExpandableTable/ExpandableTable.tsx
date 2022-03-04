@@ -53,7 +53,7 @@ const ExpandableTable = <T extends ExpandableTableRow, I extends ExpandableTable
 				striped={false}
 				className="m-expandable-table-sub-list"
 				columns={columns(values, setFieldValue, onRenderChildren)}
-				rows={rowData.children}
+				rows={rowData?.children}
 				noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-ITEMS'])}
 				loading={false}
 			/>
