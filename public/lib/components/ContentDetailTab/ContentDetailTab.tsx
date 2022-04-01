@@ -165,7 +165,7 @@ const ContentDetailTab: FC<ExternalTabProps> = ({
 				statusesPagination?.data.find(
 					status => status.data.systemName === revision.meta.data.workflowStateName
 				)?.data.name || ContentStateMapping[revision.meta.data.state],
-			lastEditor: revision.meta.user.firstname
+			lastEditor: revision.meta?.user?.firstname
 				? `${revision.meta.user.firstname} ${revision.meta.user.lastname}`
 				: 'Onbekend',
 			checked: isChecked,
