@@ -18,8 +18,8 @@
     "lint": "npm run lint:scss && npm run lint:ts",
     "test": "jest ./public",
     "docs": "npm run docs:html && npm run docs:markdown",
-    "docs:html": "typedoc --plugin none --entryPoints ./public/index.tsx --entryPoints ./public/lib/api/index.ts --excludePrivate --out docs",
-    "docs:markdown": "typedoc --plugin typedoc-plugin-markdown --plugin typedoc-github-wiki-theme --entryPoints ./public/index.tsx --entryPoints ./public/lib/api/index.ts --excludePrivate --theme github-wiki --out docs/markdown"
+    "docs:html": "typedoc --plugin typedoc-plugin-missing-exports --excludeExternals true --entryPoints ./public/index.tsx --entryPoints ./public/lib/api/api.ts --excludePrivate --out docs",
+    "docs:markdown": "typedoc --plugin typedoc-plugin-markdown --plugin typedoc-github-wiki-theme --plugin typedoc-plugin-missing-exports --excludeExternals true --entryPoints ./public/index.tsx --entryPoints ./public/lib/api/api.ts --excludePrivate --theme github-wiki --out docs/markdown"
   },
   "repository": {
     "type": "git",
@@ -59,13 +59,13 @@
     "@types/react": "16.9.19",
     "@types/react-router-dom": "^5.3.2",
     "@types/webpack-env": "^1.15.1",
-    "@typescript-eslint/eslint-plugin": "2.17.0",
-    "@typescript-eslint/parser": "2.17.0",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
     "babel-jest": "25.1.0",
     "classnames": "^2.3.1",
     "clean-webpack-plugin": "3.0.0",
     "concurrently": "5.1.0",
-    "eslint": "6.8.0",
+    "eslint": "^7.1.0",
     "eslint-config-prettier": "6.10.0",
     "eslint-plugin-import": "2.25.2",
     "eslint-plugin-prettier": "3.1.2",
@@ -86,14 +86,17 @@
     "stylelint": "13.0.0",
     "stylelint-config-standard": "19.0.0",
     "ts-loader": "6.2.1",
-    "typescript": "4.6.3",
-    "typedoc": "^0.22.4",
+    "typedoc": "^0.22.15",
     "typedoc-github-wiki-theme": "^1.0.0",
     "typedoc-plugin-markdown": "^3.11.14",
+    "typescript": "^4.6.3",
     "webpack": "4.41.5",
     "webpack-bundle-analyzer": "3.6.0",
     "webpack-cli": "3.3.10"
   },
   "author": "Glenn Verschooren",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "typedoc-plugin-missing-exports": "^0.22.6"
+  }
 }
